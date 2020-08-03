@@ -1,8 +1,8 @@
-# Hello Struts2
+# Hello struts2
 
-## Struts2概述
+## struts2概述
 
-    ·Struts2是一个用来开发MVC应用程序的框架。
+    ·struts2是一个用来开发MVC应用程序的框架。
      它提供了Web应用程序开发过程中一些常见问题的解决方案：
         -对来自用户的输入数据进行合法性验证
         -统一的布局
@@ -13,30 +13,30 @@
         -文件的上传和下载
         ...
         
-### Struts2 VS Struts1
+### struts2 VS struts1
 
     ·在体系结构方面更优秀
         -类更少，更高效：
-            在Struts2中无需使用“ActionForm”来封装请求参数
+            在struts2中无需使用“ActionForm”来封装请求参数
         -扩展更容易：
-            Struts2通过拦截器完成了框架的大部分工作。
-            在Struts2中插入一个拦截器对象箱单简单易行。
+            struts2通过拦截器完成了框架的大部分工作。
+            在struts2中插入一个拦截器对象箱单简单易行。
     ·更容易测试
-        -即使不使用浏览器也可以对基于Struts2的应用进行测试
+        -即使不使用浏览器也可以对基于struts2的应用进行测试
         
-### 从Struts1升级到Struts2
+### 从struts1升级到struts2
 
-    ·Struts2从本质上讲已经不是从从Struts1扩展而来的，说它是一个换了品牌标签的WebWork更合适
+    ·struts2从本质上讲已经不是从从struts1扩展而来的，说它是一个换了品牌标签的WebWork更合适
     
-    ·从Struts1升级到Struts2
-        -Struts1里使用了ActionServlet作为控制器，Struts2使用了一个过滤器作为控制器
-        -Struts1中每个表单都对应一个ActionForm实例，Struts2中，HTML表单将被直接映射到一个POJO
-        -Struts1的验证逻辑编写在ActionForm中，Struts2中的验证逻辑编写在Action中
-        -Struts1中，Action类必须继承org.apache.struts.action.Action类，
-         Struts2中任何一个POJO都可以是一个Action类
-        -Struts2在页面里使用OGNL来显示各种对象模型，可以不再使用EL和JSTL
+    ·从struts1升级到struts2
+        -struts1里使用了ActionServlet作为控制器，struts2使用了一个过滤器作为控制器
+        -struts1中每个表单都对应一个ActionForm实例，struts2中，HTML表单将被直接映射到一个POJO
+        -struts1的验证逻辑编写在ActionForm中，struts2中的验证逻辑编写在Action中
+        -struts1中，Action类必须继承org.apache.struts.action.Action类，
+         struts2中任何一个POJO都可以是一个Action类
+        -struts2在页面里使用OGNL来显示各种对象模型，可以不再使用EL和JSTL
         
-### 搭建Struts2的环境
+### 搭建struts2的环境
 
     -加入jar包
     -在web.xml文件中配置struts2
@@ -44,9 +44,9 @@
     -在当前的web应用的classpath下添加struts2的配置文件struts.xml
         ※记得添加DTD约束以便IDE可以在编写struts.xml时提供自动联想
         
-### Struts2 VS 传统实现Controller
+### struts2 VS 传统实现Controller
 
-    1. 需要搭建Struts2环境
+    1. 需要搭建struts2环境
     2. 不需要显式定义Filter，而是使用struts2的配置文件
     3. detail.jsp比之前变得简单了
         ${requestScope.product.productName} => ${productName}
@@ -67,7 +67,7 @@
                 <result name="detail">/WEB-INF/pages/detail.jsp</result>
             </action>
 
-## Struts2 Action
+## struts2 Action
 
 ### action VS Action类
 
@@ -109,7 +109,7 @@
                 
 #### 和ServletAPI解耦的访问方式
        
-    Struts2对
+    struts2对
         HttpServletRequest
         HttpSession
         ServletContext
@@ -148,7 +148,7 @@
         > HttpServletResponse
             ServletResponseAware => setServletResponse()
         
-### 配置Struts可以受理请求的扩展名
+### 配置struts可以受理请求的扩展名
 
     1. 默认
         struts2-core
@@ -175,7 +175,7 @@
     ·TextProvider 国际化
     ·LocaleProvider 国际化
     
-## Struts2 result
+## struts2 result
 
     1. result是action节点的子节点
     
@@ -226,3 +226,105 @@
         > 设置启用：
             <constant name="struts.enable.DynamicMethodInvocation" value="true"></constant>
             
+## OGNL
+
+    在struts中，对象可以不从域中直接获取。
+    而是通过struts的包装类StrutsRequstWrapper的getAttribut()方法来从值栈中取值。
+    
+### ValueStack（值栈）
+
+    贯穿整个Action的生命周期（每个Action实例都有一个ValueStack对象）。
+    struts把ValueStack对象保存在名为struts.valueStack的请求属性中。
+    
+    在ValueStack中有两个逻辑部分：
+        ContextMap（context属性）:
+            struts把各种各样的映射关系压入ContextMap中，实际上就是对ActionContext的一个引用。
+            struts会把下面这些映射压入ContextMap中：
+                -parameters 请求参数
+                -request 当前request的所有属性
+                -session 当前session的所有属性
+                -application 当前application的所有属性
+                -attr 检索以上各Map，顺序为：request -> session -> application
+        ObjectStack（root属性）:
+            struts把Action和相关对象压入ObjectStack中
+        
+### OGNL介绍
+
+    ·在JSP页面上可以利用OGNL（Object-Graph Navigation Language：对象-导航图语言）
+     访问到值栈里对象的属性
+     
+    ·若希望访问值栈里ContextMap中的数据，需要给OGNL表达式加上一个前缀字符串#。
+     如果没有#号，搜索将在ObjectStack里进行。
+     
+### property标签
+
+    struts2利用s:property标签和OGNL表达式来读取值栈中的属性值
+    
+#### 值栈中的属性值：
+    
+    > 对于对象栈：
+        对象栈中某一对象的属性值
+    > 对于Map栈：
+        request, session, application的一个属性值或一个请求参数的值
+        
+#### ObjectStack里的属性值
+        
+    1. 读取ObjectStack里的对象属性
+        ·object.propertyName
+        ·object['propertyName']
+        ·object["propertyName"]
+    2. ObjectStack里的对象可以通过一个从零开始的下标来引用
+        [0].name => 栈顶对象的name属性
+    3. 若在指定对象中未找到该属性，在下一个对象里继续搜索。[n] : [>=n]的所有对象
+    4. 若从栈顶对象开始搜索，则可以省略下标
+        <s:property value="[0].message" />
+        <s:property value="message" />
+        
+    > 默认情况下，Action对象会被struts2自动放到值栈的栈顶
+    
+#### Map对象中的属性值
+    
+    1. 读取Map对象总的属性值
+        #object.propertyName
+        #object['propertyName']
+        #object["propertyName"]
+    2. 如
+        #session.user
+        #request.product.name
+        
+### OGNL还可以访问：
+    
+    ·数组对象
+        list[0]
+    ·Map对象
+        map[key]
+        
+### EL表达式也可以访问值栈中的值！
+
+    ·单个值的访问仍然是EL表达式更加简便
+    
+    ·原理：
+        StrutsRequestWrapper重写了getAttribute()方法，重写后的方法的查询对象包括值栈
+        
+## Struts2的运行流程
+
+    HttpServletRequest
+    ↓
+    StrutsPreparedAndExecutorFilter
+    ↓                               ↓ ↑     
+    ActionProxy → ActionInvocation  ActionMapper
+    ↓ ↑                         |
+    ConfigurationManager        |→Interceptor1
+    ↓ ↑                         |→Interceptor2
+    struts.xml                  |→Interceptor3  TagSystem
+                                |→Action         ↓
+                                |→Result → Template, JSP, FreeMarker...
+                                |→Interceptor3
+                                |→Interceptor2
+                                |→Interceptor1
+                                   ↓
+                                   HttpServletResponse
+           
+## Struts2 输入验证
+
+    ToDo: Maybe some other day

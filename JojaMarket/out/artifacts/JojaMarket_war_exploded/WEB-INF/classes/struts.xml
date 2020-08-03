@@ -10,6 +10,8 @@
 
     <constant name="struts.enable.DynamicMethodInvocation" value="true"></constant>
 
+    <constant name="struts.devMode" value="true"></constant>
+
     <!--
          package: 包。 struts2使用package来组织模块
          name: 属性，必须。用于其他的包应用当前包
@@ -49,10 +51,11 @@
         <action name="logout" class="pt.action.LogoutAction">
             <result>/login.jsp</result>
         </action>
+        -->
 
         <action name="product-input">
             <result>/WEB-INF/pages/input.jsp</result>
-        </action>-->
+        </action>
 
         <action name="product-save" class="pt.domain.Product" method="save">
             <result name="detail">/WEB-INF/pages/detail.jsp</result>
@@ -122,7 +125,7 @@
     </package>
 
     <!-- 可以扩展到不同的配置文件中 -->
-    <include file="example.xml" />
+    <include file="example.xml"/>
 
 
 </struts>

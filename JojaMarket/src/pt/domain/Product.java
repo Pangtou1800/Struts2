@@ -1,5 +1,8 @@
 package pt.domain;
 
+import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ServletActionContext;
+
 public class Product {
 
     private String id;
@@ -63,6 +66,10 @@ public class Product {
     }
 
     public String save() {
+
+        ServletActionContext.getRequest().setAttribute("product", this);
+
+
         System.out.println("save: " + this);
         return "detail";
     }

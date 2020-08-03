@@ -1,3 +1,4 @@
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: aband
@@ -20,10 +21,20 @@
 
     <h4>Product Information:</h4>
 
+    <s:debug></s:debug>
+
     <table class="table table-striped">
         <tr>
             <td class="col-md-3">ProductName:</td>
             <td>${ name }</td>
+        </tr>
+        <tr>
+            <td class="col-md-3">ProductName:</td>
+            <td><s:property value="[0].name" /></td>
+        </tr>
+        <tr>
+            <td class="col-md-3">ProductName:</td>
+            <td><s:property value="#request.product.name" /></td>
         </tr>
         <tr>
             <td class="col-md-3">ProductDescription:</td>
@@ -33,7 +44,6 @@
             <td class="col-md-3">ProductPrice:</td>
             <td>${ price }</td>
         </tr>
-
     </table>
     <br>
     <a href="product-input.action" class="btn btn-primary btn-sm">Input more Products...</a>
